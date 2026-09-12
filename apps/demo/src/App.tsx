@@ -1,7 +1,7 @@
-import { BoundaryMap, useBoundaries } from "@geo-atlas/react";
+import { BoundaryMap, useBoundaries, type RegionValue } from "@geo-atlas/react";
 import { useState } from "react";
 import { corsProxyFetch } from "./corsProxyFetch.js";
-import { mockNigeriaScanRates } from "./mockData.js";
+import { mockKenyaScanRates, mockNigeriaScanRates, mockUkScanRates, mockUsaScanRates } from "./mockData.js";
 
 function scanRateColor(value: number | undefined): string {
   if (value === undefined) return "#EEEEEE";
@@ -9,6 +9,13 @@ function scanRateColor(value: number | undefined): string {
   if (value < 70) return "#FFE099";
   return "#B7E1C1";
 }
+
+const MOCK_DATA_BY_COUNTRY: Record<string, RegionValue[]> = {
+  NG: mockNigeriaScanRates,
+  KE: mockKenyaScanRates,
+  GB: mockUkScanRates,
+  US: mockUsaScanRates,
+};
 
 export default function App() {
   const [country, setCountry] = useState("NG");
@@ -44,7 +51,7 @@ export default function App() {
       {boundaries && (
         <BoundaryMap
           boundaries={boundaries}
-          data={country === "NG" ? mockNigeriaScanRates : []}
+          data={MOCK_DATA_BY_COUNTRY[country] ?? []}
           colorScale={scanRateColor}
           width={700}
           height={550}
