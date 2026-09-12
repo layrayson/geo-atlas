@@ -1,4 +1,5 @@
-import { fetchFromGeoBoundaries, type FetchFn } from "./geoboundaries.js";
+import { fetchFromGeoBoundaries, toIso3, type FetchFn } from "./geoboundaries.js";
+import { fetchFromMirror, isMirrored } from "./mirror.js";
 import type { BoundaryFeatureCollection, BoundaryQuery } from "./types.js";
 
 export * from "./types.js";
@@ -31,10 +32,19 @@ export function getBoundaries(
 ): Promise<BoundaryFeatureCollection> {
   const level = query.level ?? "admin1";
   const resolution = query.resolution ?? "simplified";
-  const cacheKey = `${query.country.toUpperCase()}:${level}:${resolution}`;
+  const iso3 = toIso3(query.country);
+  const cacheKey = `${iso3}:${level}:${resolution}`;
+  const fetchImpl = options.fetchImpl ?? fetch;
 
   if (!cache.has(cacheKey)) {
-    cache.set(cacheKey, fetchFromGeoBoundaries(query.country, level, resolution, options.fetchImpl));
+    // Prefer the mirror when this country/level/resolution is covered - it
+    // works from a plain browser with no proxy, unlike a live geoBoundaries
+    // fetch (see mirror.ts). Falls back to fetching geoBoundaries directly
+    // for anything not yet mirrored.
+    const promise = isMirrored(iso3, level, resolution)
+      ? fetchFromMirror(iso3, level, resolution, fetchImpl)
+      : fetchFromGeoBoundaries(iso3, level, resolution, fetchImpl);
+    cache.set(cacheKey, promise);
   }
   return cache.get(cacheKey)!;
 }
