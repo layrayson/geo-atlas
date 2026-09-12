@@ -1,4 +1,4 @@
-import rewind from "geojson-rewind";
+import { rewind } from "@turf/rewind";
 import { ISO2_TO_ISO3 } from "./iso-codes.js";
 import { validateBoundaryFeatureCollection } from "./validate.js";
 import type { BoundaryFeatureCollection, BoundaryLevel, Resolution } from "./types.js";
@@ -77,7 +77,9 @@ export async function fetchFromGeoBoundaries(
   // (apps/demo) — see spikes/04-browser-cors for the full writeup. Rewinding
   // here in core means every consumer gets correct geometry regardless of
   // which rendering library they use.
-  const normalized = rewind(raw, true);
+  // @turf/rewind's return type doesn't narrow by input type - we already know
+  // `raw` is a FeatureCollection from the validation above.
+  const normalized = rewind(raw, { reverse: true }) as BoundaryFeatureCollection;
 
   return {
     ...normalized,

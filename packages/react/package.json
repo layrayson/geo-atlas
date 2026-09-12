@@ -1,10 +1,44 @@
 {
   "name": "@geo-atlas/react",
   "version": "0.0.1",
+  "description": "React map components for @geo-atlas/core - <BoundaryMap /> and useBoundaries(), wrapping react-simple-maps/d3-geo.",
   "type": "module",
-  "main": "./src/index.tsx",
-  "types": "./src/index.tsx",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/layrayson/geo-atlas.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/layrayson/geo-atlas#readme",
+  "bugs": "https://github.com/layrayson/geo-atlas/issues",
+  "keywords": [
+    "geojson",
+    "react",
+    "map",
+    "choropleth",
+    "boundaries",
+    "d3-geo"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm build",
+    "test": "vitest run"
+  },
   "peerDependencies": {
     "react": ">=18"
   },

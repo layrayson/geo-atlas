@@ -1,14 +1,48 @@
 {
   "name": "@geo-atlas/core",
   "version": "0.0.1",
+  "description": "Normalized, validated GeoJSON boundary data for countries and their admin1 subdivisions - fetch, validate, and correctly-wound out of the box.",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
-  "dependencies": {
-    "geojson-rewind": "^0.3.1"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/layrayson/geo-atlas.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/layrayson/geo-atlas#readme",
+  "bugs": "https://github.com/layrayson/geo-atlas/issues",
+  "keywords": [
+    "geojson",
+    "boundaries",
+    "geoboundaries",
+    "map",
+    "choropleth",
+    "gis"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm build",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.14"
+  },
+  "dependencies": {
+    "@turf/rewind": "^7.4.0"
   }
 }

@@ -2,7 +2,7 @@
 
 Open-source npm library idea: normalized, validated GeoJSON boundary data (countries/continents/states) plus customizable map components — so building something like a choropleth scan-rate map doesn't mean hunting across random file hosts for boundary data that might just be wrong.
 
-Status: working proof of concept. Nothing published to npm yet.
+Status: `@geo-atlas/core` and `@geo-atlas/react` are built, tested, and ready to publish - not yet on npm.
 
 ## Shape
 
@@ -21,10 +21,20 @@ Status: working proof of concept. Nothing published to npm yet.
 
 ```bash
 pnpm install
+pnpm --filter @geo-atlas/core build   # packages/core and packages/react ship compiled
+pnpm --filter @geo-atlas/react build  # output (dist/), so build both before running the demo
 pnpm --filter demo dev
 ```
 
 Then open the printed `localhost` URL. Pick any country from the dropdown — every region gets a mock scan-rate color. 197 countries load instantly from the CDN mirror with no proxy (see [geo-atlas-data/manifest.json](https://github.com/layrayson/geo-atlas-data/blob/main/manifest.json) for the full list); everything else falls back through the demo's local dev-server proxy (standing in for a real app's own backend route).
+
+## Tests
+
+```bash
+pnpm test
+```
+
+38 tests (Vitest) across `packages/core` (ISO code resolution, GeoJSON validation, mirror-vs-live routing, caching, the ring-winding fix), `packages/react` (`useBoundaries`, `BoundaryMap`), and the demo's CORS-proxy routing. All mocked - no network calls.
 
 ## Other scripts
 
