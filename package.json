@@ -1,0 +1,13 @@
+{
+  "name": "geo-atlas",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "spike:geoboundaries": "tsx spikes/01-geoboundaries-survey/fetch-sample.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
