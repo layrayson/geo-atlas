@@ -1,0 +1,20 @@
+{
+  "name": "@geo-atlas/react",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "dependencies": {
+    "@geo-atlas/core": "workspace:*",
+    "react-simple-maps": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-simple-maps": "^3.0.6",
+    "react": "^18.3.1"
+  }
+}
