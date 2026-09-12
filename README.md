@@ -2,13 +2,13 @@
 
 Open-source npm library idea: normalized, validated GeoJSON boundary data (countries/continents/states) plus customizable map components — so building something like a choropleth scan-rate map doesn't mean hunting across random file hosts for boundary data that might just be wrong.
 
-Status: working proof of concept. Nothing published yet.
+Status: working proof of concept. Nothing published to npm yet.
 
 ## Shape
 
-- `packages/core` — `getBoundaries({ country, level, resolution })` fetches, validates, and normalizes boundary data from geoBoundaries.org (CC BY family; Natural Earth for lower-detail views is a planned addition). GADM is intentionally excluded — its license blocks redistribution.
+- `packages/core` — `getBoundaries({ country, level, resolution })` fetches, validates, and normalizes boundary data. For the 10 countries covered by [geo-atlas-data](https://github.com/layrayson/geo-atlas-data) (a CDN mirror), it works directly in a browser with zero setup; everything else falls back to a live geoBoundaries.org fetch, which needs a same-origin proxy in a pure client-side app (server-side/SSR needs nothing extra either way). GADM is intentionally excluded as a source — its license blocks redistribution.
 - `packages/react` — `<BoundaryMap />` + `useBoundaries()`, wrapping `react-simple-maps`/d3-geo.
-- `apps/demo` — a working example: a Nigeria scan-rate choropleth (mock data) with country switching (NG/KE/GB/US).
+- `apps/demo` — a working example: a scan-rate choropleth (mock data, generated per-region so it works for any country) with a full ~195-country dropdown.
 
 ## Spikes
 
@@ -24,10 +24,11 @@ pnpm install
 pnpm --filter demo dev
 ```
 
-Then open the printed `localhost` URL. Switch between NG/KE/GB/US with the buttons — Nigeria has mock scan-rate data and is clickable; the others just show boundaries.
+Then open the printed `localhost` URL. Pick any country from the dropdown — every region gets a mock scan-rate color. NGA/KEN/GBR/USA/IND/BRA/CHN/ZAF/AUS/FRA load instantly from the CDN mirror with no proxy; everything else falls back through the demo's local dev-server proxy (standing in for a real app's own backend route).
 
 ## Other scripts
 
 ```bash
-pnpm spike:geoboundaries   # re-run the spike 01 data source survey
+pnpm spike:geoboundaries        # re-run the spike 01 data source survey
+pnpm exec tsx scripts/build-mirror.ts   # regenerate/extend the CDN mirror data (writes to ../geo-atlas-data)
 ```
