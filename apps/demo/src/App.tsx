@@ -1,19 +1,20 @@
 import type { BoundaryFeatureCollection } from "@geo-atlas/core";
-import { BoundaryMap, useBoundaries, type RegionValue } from "@geo-atlas/react";
+import { BoundaryMap, useBoundaries } from "@geo-atlas/react";
 import { geoAlbersUsa } from "d3-geo";
 import { useMemo, useState } from "react";
+import { ALL_COUNTRIES } from "./countries.js";
 import { corsProxyFetch } from "./corsProxyFetch.js";
-import { mockKenyaScanRates, mockNigeriaScanRates, mockUkScanRates, mockUsaScanRates } from "./mockData.js";
+import { mockScanRatesFor } from "./mockData.js";
 
 /**
  * US territories span ~150° of longitude (Guam at +145°E to American Samoa
  * at -170°) - fitting that whole span makes the mainland+Alaska (the only
- * part anyone actually looks at) shrink to a sliver in the corner of the
- * canvas. This is the standard "US is absurdly spread out" problem every
- * real US choropleth map solves with a composite projection (geoAlbersUsa)
- * instead of true-position fitting. geoAlbersUsa only knows how to place the
- * 50 states + DC, so those territories are filtered out before fitting/
- * rendering when this projection is used.
+ * part anyone actually looks at) shrink to a sliver in the canvas with lots
+ * of empty space. This is the standard "US is absurdly spread out" problem
+ * every real US choropleth map solves with a composite projection
+ * (geoAlbersUsa) instead of true-position fitting. geoAlbersUsa only knows
+ * how to place the 50 states + DC, so those territories are filtered out
+ * before fitting/rendering when this projection is used.
  */
 const US_TERRITORY_SHAPE_ISO = new Set(["US-PR", "US-VI", "US-GU", "US-MP", "US-AS"]);
 
@@ -31,13 +32,6 @@ function scanRateColor(value: number | undefined): string {
   return "#B7E1C1";
 }
 
-const MOCK_DATA_BY_COUNTRY: Record<string, RegionValue[]> = {
-  NG: mockNigeriaScanRates,
-  KE: mockKenyaScanRates,
-  GB: mockUkScanRates,
-  US: mockUsaScanRates,
-};
-
 export default function App() {
   const [country, setCountry] = useState("NG");
   const { boundaries, loading, error } = useBoundaries(
@@ -47,9 +41,9 @@ export default function App() {
   const [selected, setSelected] = useState<string>();
 
   // Gate on the *loaded* data's own country code (shapeGroup), not the
-  // `country` click-state. `country` updates synchronously on click, but
+  // `country` select-state. `country` updates synchronously on select, but
   // `boundaries` only catches up once the async fetch resolves - gating on
-  // `country` created a window where a just-clicked "US" would pair the
+  // `country` created a window where a just-selected "US" would pair the
   // AlbersUSA projection with the *previous* country's still-loaded geometry
   // (e.g. Kenya's coordinates run through a projection that only recognizes
   // US points), producing NaN paths for every feature until the real US data
@@ -67,6 +61,11 @@ export default function App() {
     [displayBoundaries, isUsData]
   );
 
+  const mockData = useMemo(
+    () => (displayBoundaries ? mockScanRatesFor(displayBoundaries) : []),
+    [displayBoundaries]
+  );
+
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", padding: 24, maxWidth: 900, margin: "0 auto" }}>
       <h1>geo-atlas demo</h1>
@@ -76,19 +75,17 @@ export default function App() {
       </p>
 
       <div style={{ marginBottom: 16 }}>
-        {["NG", "KE", "GB", "US"].map((code) => (
-          <button
-            key={code}
-            onClick={() => setCountry(code)}
-            style={{ marginRight: 8, fontWeight: country === code ? 700 : 400 }}
-          >
-            {code}
-          </button>
-        ))}
+        <select value={country} onChange={(e) => setCountry(e.target.value)}>
+          {ALL_COUNTRIES.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {loading && <p>Loading boundary data...</p>}
-      {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
+      {error && <p style={{ color: "red" }}>Error: {error.message} (this country may not have admin1-level data in geoBoundaries)</p>}
 
       {displayBoundaries && (
         <BoundaryMap
@@ -98,7 +95,7 @@ export default function App() {
           // never gets reused across two entirely different countries.
           key={country}
           boundaries={displayBoundaries}
-          data={MOCK_DATA_BY_COUNTRY[country] ?? []}
+          data={mockData}
           colorScale={scanRateColor}
           width={700}
           height={550}
