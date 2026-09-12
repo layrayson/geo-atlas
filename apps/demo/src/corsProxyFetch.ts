@@ -10,7 +10,7 @@
  * Requests to our own mirror (cdn.jsdelivr.net) are passed straight through,
  * unproxied — that's the whole point of the mirror: jsDelivr serves plain
  * committed files with correct CORS headers directly, no workaround needed.
- * This is what makes the 10 mirrored countries work with zero setup, exactly
+ * This is what makes the mirrored countries work with zero setup, exactly
  * like a real consumer of @geo-atlas/core would experience it.
  */
 export const corsProxyFetch: typeof fetch = (input, init) => {

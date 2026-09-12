@@ -6,7 +6,7 @@ Status: working proof of concept. Nothing published to npm yet.
 
 ## Shape
 
-- `packages/core` — `getBoundaries({ country, level, resolution })` fetches, validates, and normalizes boundary data. For the 10 countries covered by [geo-atlas-data](https://github.com/layrayson/geo-atlas-data) (a CDN mirror), it works directly in a browser with zero setup; everything else falls back to a live geoBoundaries.org fetch, which needs a same-origin proxy in a pure client-side app (server-side/SSR needs nothing extra either way). GADM is intentionally excluded as a source — its license blocks redistribution.
+- `packages/core` — `getBoundaries({ country, level, resolution })` fetches, validates, and normalizes boundary data. For the 197 countries covered by [geo-atlas-data](https://github.com/layrayson/geo-atlas-data) (a CDN mirror), it works directly in a browser with zero setup; everything else — mostly dependent territories and microstates geoBoundaries doesn't publish ADM1 data for (Bermuda, Hong Kong, Puerto Rico, Vatican, etc.) — falls back to a live geoBoundaries.org fetch, which needs a same-origin proxy in a pure client-side app (server-side/SSR needs nothing extra either way). GADM is intentionally excluded as a source — its license blocks redistribution.
 - `packages/react` — `<BoundaryMap />` + `useBoundaries()`, wrapping `react-simple-maps`/d3-geo.
 - `apps/demo` — a working example: a scan-rate choropleth (mock data, generated per-region so it works for any country) with a full ~195-country dropdown.
 
@@ -24,7 +24,7 @@ pnpm install
 pnpm --filter demo dev
 ```
 
-Then open the printed `localhost` URL. Pick any country from the dropdown — every region gets a mock scan-rate color. NGA/KEN/GBR/USA/IND/BRA/CHN/ZAF/AUS/FRA load instantly from the CDN mirror with no proxy; everything else falls back through the demo's local dev-server proxy (standing in for a real app's own backend route).
+Then open the printed `localhost` URL. Pick any country from the dropdown — every region gets a mock scan-rate color. 197 countries load instantly from the CDN mirror with no proxy (see [geo-atlas-data/manifest.json](https://github.com/layrayson/geo-atlas-data/blob/main/manifest.json) for the full list); everything else falls back through the demo's local dev-server proxy (standing in for a real app's own backend route).
 
 ## Other scripts
 
