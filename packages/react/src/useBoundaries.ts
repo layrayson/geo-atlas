@@ -1,4 +1,9 @@
-import { getBoundaries, type BoundaryFeatureCollection, type BoundaryQuery } from "@geo-atlas/core";
+import {
+  getBoundaries,
+  type BoundaryFeatureCollection,
+  type BoundaryQuery,
+  type GetBoundariesOptions,
+} from "@geo-atlas/core";
 import { useEffect, useState } from "react";
 
 export interface UseBoundariesResult {
@@ -7,7 +12,7 @@ export interface UseBoundariesResult {
   error: Error | undefined;
 }
 
-export function useBoundaries(query: BoundaryQuery): UseBoundariesResult {
+export function useBoundaries(query: BoundaryQuery, options?: GetBoundariesOptions): UseBoundariesResult {
   const [boundaries, setBoundaries] = useState<BoundaryFeatureCollection>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error>();
@@ -17,7 +22,7 @@ export function useBoundaries(query: BoundaryQuery): UseBoundariesResult {
     setLoading(true);
     setError(undefined);
 
-    getBoundaries(query)
+    getBoundaries(query, options)
       .then((result) => {
         if (!cancelled) setBoundaries(result);
       })

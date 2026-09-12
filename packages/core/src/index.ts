@@ -1,9 +1,21 @@
-import { fetchFromGeoBoundaries } from "./geoboundaries.js";
+import { fetchFromGeoBoundaries, type FetchFn } from "./geoboundaries.js";
 import type { BoundaryFeatureCollection, BoundaryQuery } from "./types.js";
 
 export * from "./types.js";
 export { InvalidBoundaryDataError } from "./validate.js";
 export { toIso3 } from "./geoboundaries.js";
+export type { FetchFn } from "./geoboundaries.js";
+
+export interface GetBoundariesOptions {
+  /**
+   * Override for the fetch call. Defaults to the global `fetch`, which works
+   * fine server-side (Node, SSR, API routes). In a browser with no backend,
+   * geoBoundaries' GitHub-LFS-backed URLs will fail CORS on the redirect hop
+   * (see fetchFromGeoBoundaries' doc comment) — pass a fetchImpl here that
+   * routes through a same-origin proxy to work around it.
+   */
+  fetchImpl?: FetchFn;
+}
 
 const cache = new Map<string, Promise<BoundaryFeatureCollection>>();
 
@@ -13,13 +25,16 @@ const cache = new Map<string, Promise<BoundaryFeatureCollection>>();
  * full resolution can be 10-70x larger (see spikes/01-geoboundaries-survey)
  * and should be requested explicitly.
  */
-export function getBoundaries(query: BoundaryQuery): Promise<BoundaryFeatureCollection> {
+export function getBoundaries(
+  query: BoundaryQuery,
+  options: GetBoundariesOptions = {}
+): Promise<BoundaryFeatureCollection> {
   const level = query.level ?? "admin1";
   const resolution = query.resolution ?? "simplified";
   const cacheKey = `${query.country.toUpperCase()}:${level}:${resolution}`;
 
   if (!cache.has(cacheKey)) {
-    cache.set(cacheKey, fetchFromGeoBoundaries(query.country, level, resolution));
+    cache.set(cacheKey, fetchFromGeoBoundaries(query.country, level, resolution, options.fetchImpl));
   }
   return cache.get(cacheKey)!;
 }

@@ -1,4 +1,6 @@
 import type { BoundaryFeatureCollection } from "@geo-atlas/core";
+import { geoMercator, type GeoProjection } from "d3-geo";
+import { useMemo } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 
 export interface RegionValue {
@@ -18,7 +20,15 @@ export interface BoundaryMapProps {
   data: RegionValue[];
   colorScale: (value: number | undefined) => string;
   strokeColor?: string;
-  projectionConfig?: { scale?: number; center?: [number, number] };
+  /**
+   * Optional pre-built d3 projection (e.g. geoMercator().rotate(...)). When
+   * omitted, the map auto-fits a Mercator projection to `boundaries` — this
+   * is deliberate: geoBoundaries' raw coordinate ranges vary per country and
+   * per source, so a hardcoded scale/center tuned for one country's data
+   * will misrender for another (confirmed while building the demo — see
+   * apps/demo, the very bug this auto-fit exists to avoid).
+   */
+  projection?: GeoProjection;
   width?: number;
   height?: number;
   onRegionClick?: (region: RegionClickInfo) => void;
@@ -34,13 +44,22 @@ export function BoundaryMap({
   data,
   colorScale,
   strokeColor = "#FFFFFF",
-  projectionConfig = { scale: 800, center: [0, 0] },
+  projection,
   width = 800,
   height = 600,
   onRegionClick,
 }: BoundaryMapProps) {
+  const fittedProjection = useMemo(
+    () => projection ?? geoMercator().fitSize([width, height], boundaries),
+    [projection, boundaries, width, height]
+  );
+
   return (
-    <ComposableMap projection="geoMercator" projectionConfig={projectionConfig} width={width} height={height}>
+    // @types/react-simple-maps mistypes `projection` as a (width, height, config) =>
+    // GeoProjection factory. At runtime it just checks typeof projection === "function"
+    // and uses it directly as the projection (see react-simple-maps/dist/index.js) — a
+    // d3 GeoProjection is itself callable, so a ready-made one works fine here.
+    <ComposableMap projection={fittedProjection as unknown as string} width={width} height={height}>
       <Geographies geography={boundaries}>
         {({ geographies }) =>
           geographies.map((geo) => {
