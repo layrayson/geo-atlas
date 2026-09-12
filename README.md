@@ -12,6 +12,8 @@ Status: early spike phase. Nothing published yet.
 ## Spikes
 
 - [01 — geoBoundaries survey](./spikes/01-geoboundaries-survey/README.md): validated schema consistency, license spread, and file size across 10 diverse countries. **Result: green light.**
+- [02 — ADM2 scale check](./spikes/02-adm2-scale/README.md): district-level data is 10-20x larger; deferred past v1.
+- [03 — disputed territories](./spikes/03-disputed-territories/README.md): source data has inherent contradictions (e.g. Taiwan as both independent and a China province); library will pass through source data faithfully rather than editorialize.
 
 ## Setup
 

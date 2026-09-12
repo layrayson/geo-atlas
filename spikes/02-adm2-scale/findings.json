@@ -1,0 +1,20 @@
+[
+  {
+    "iso": "NGA",
+    "level": "ADM2",
+    "admUnitCount": "774",
+    "simplifiedSizeKB": 3275.6
+  },
+  {
+    "iso": "KEN",
+    "level": "ADM2",
+    "admUnitCount": "290",
+    "simplifiedSizeKB": 1778.9
+  },
+  {
+    "iso": "GBR",
+    "level": "ADM2",
+    "admUnitCount": "216",
+    "simplifiedSizeKB": 759.6
+  }
+]

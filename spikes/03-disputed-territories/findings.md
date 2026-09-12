@@ -1,0 +1,5 @@
+# Spike 03 findings
+
+- TWN has its own independent ADM0 entry in geoBoundaries (source: geoBoundaries, Pixabay). Confirms Taiwan is treated as a separate boundary, not merged into China's shape.
+- CHN ADM1 shapeNames (34): Hainan Province, Taiwan Province, Guangxi Zhuang Autonomous Region, Fujian Province, Yunnan Province, Guizhou Province, Jiangxi Province, Hunan Province, Zhejiang Province, Shanghai Municipality, Chongqing Municipality, Hubei Province, Sichuan Province, Anhui Province, Jiangsu Province, Henan Province, Tibet Autonomous Region, Shandong Province, Qinghai Province, Ningxia Ningxia Hui Autonomous Region, Shaanxi Province, Tianjin Municipality, Shanxi Province, Beijing Municipality, Gansu Province, Hebei Province, Liaoning Province, Jilin Province, Xinjiang Uyghur Autonomous Region, Inner Mongolia Autonomous Region, Heilongjiang Province, Macau Special Administrative Region, Hong Kong Special Administrative Region, Guangzhou Province
+- IND ADM1 units matching Kashmir/Jammu/Ladakh: Jammu and Kashmīr
