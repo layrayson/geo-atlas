@@ -16,6 +16,17 @@ export interface GetBoundariesOptions {
    * routes through a same-origin proxy to work around it.
    */
   fetchImpl?: FetchFn;
+
+  /**
+   * Skip the geo-atlas-data CDN mirror and fetch straight from
+   * geoBoundaries.org, even for countries the mirror covers. The mirror is a
+   * snapshot (see scripts/build-mirror.ts) that can lag behind upstream
+   * updates — set this when you need guaranteed-current data and can accept
+   * geoBoundaries' CORS constraints (see fetchFromGeoBoundaries' doc comment).
+   * Has no effect for countries the mirror doesn't cover, since those already
+   * go straight to geoBoundaries.
+   */
+  preferLive?: boolean;
 }
 
 const cache = new Map<string, Promise<BoundaryFeatureCollection>>();
@@ -33,15 +44,16 @@ export function getBoundaries(
   const level = query.level ?? "admin1";
   const resolution = query.resolution ?? "simplified";
   const iso3 = toIso3(query.country);
-  const cacheKey = `${iso3}:${level}:${resolution}`;
+  const useMirror = !options.preferLive && isMirrored(iso3, level, resolution);
+  const cacheKey = `${iso3}:${level}:${resolution}:${useMirror ? "mirror" : "live"}`;
   const fetchImpl = options.fetchImpl ?? fetch;
 
   if (!cache.has(cacheKey)) {
     // Prefer the mirror when this country/level/resolution is covered - it
     // works from a plain browser with no proxy, unlike a live geoBoundaries
     // fetch (see mirror.ts). Falls back to fetching geoBoundaries directly
-    // for anything not yet mirrored.
-    const promise = isMirrored(iso3, level, resolution)
+    // for anything not yet mirrored, or when preferLive opts out of the mirror.
+    const promise = useMirror
       ? fetchFromMirror(iso3, level, resolution, fetchImpl)
       : fetchFromGeoBoundaries(iso3, level, resolution, fetchImpl);
     cache.set(cacheKey, promise);
