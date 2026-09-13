@@ -1,3 +1,7 @@
+---
+description: Install @geo-atlas/core and @geo-atlas/react via npm, pnpm, or yarn, and check requirements before you start.
+---
+
 # Installation
 
 geo-atlas ships as two independent packages — install only the one you need.

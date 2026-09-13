@@ -1,3 +1,7 @@
+---
+description: Why geoBoundaries fails CORS in a plain browser, which countries need a proxy, and how to add one.
+---
+
 # Browser & CORS
 
 Skip this page if you only need the [live demo](https://layrayson.github.io/geo-atlas/)'s ~197 mirrored countries in a client-only app — those work with zero setup. Read it if you need **every** country, or you're unsure which bucket a given country falls into.

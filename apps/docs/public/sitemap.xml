@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hand-written rather than generated: with 4 fixed routes, a plugin
+     dependency for this is overkill. Add a <url> entry here when a new
+     page is added under apps/docs/ - nothing else updates it automatically. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://layrayson.github.io/geo-atlas/docs/</loc>
+  </url>
+  <url>
+    <loc>https://layrayson.github.io/geo-atlas/docs/installation</loc>
+  </url>
+  <url>
+    <loc>https://layrayson.github.io/geo-atlas/docs/quick-start</loc>
+  </url>
+  <url>
+    <loc>https://layrayson.github.io/geo-atlas/docs/browser-cors</loc>
+  </url>
+</urlset>

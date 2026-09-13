@@ -1,5 +1,7 @@
 import { defineConfig } from "vitepress";
 
+const SITE_URL = "https://layrayson.github.io/geo-atlas/docs/";
+
 export default defineConfig({
   title: "geo-atlas",
   description: "Normalized, validated GeoJSON boundary data for countries and their admin1 subdivisions.",
@@ -20,6 +22,32 @@ export default defineConfig({
       },
     ],
   ],
+
+  // Canonical + Open Graph/Twitter tags, computed per page rather than set
+  // once globally - a static og:title/description on every page would make
+  // the Installation and Quick Start pages preview identically to the
+  // homepage when linked on Slack/X/Discord, which defeats the point of
+  // having a link preview at all. Confirmed against the real deployed site
+  // that GitHub Pages resolves these extensionless paths (e.g. /installation
+  // with no .html) directly, so the canonical/OG urls built here don't need
+  // a .html suffix.
+  transformHead: ({ pageData, siteConfig }) => {
+    const title = pageData.frontmatter.title || pageData.title || siteConfig.site.title;
+    const description = pageData.frontmatter.description || pageData.description || siteConfig.site.description;
+    const slug = pageData.relativePath.replace(/\.md$/, "").replace(/^index$/, "");
+    const url = `${SITE_URL}${slug}`;
+
+    return [
+      ["link", { rel: "canonical", href: url }],
+      ["meta", { property: "og:type", content: "website" }],
+      ["meta", { property: "og:url", content: url }],
+      ["meta", { property: "og:title", content: title }],
+      ["meta", { property: "og:description", content: description }],
+      ["meta", { name: "twitter:card", content: "summary" }],
+      ["meta", { name: "twitter:title", content: title }],
+      ["meta", { name: "twitter:description", content: description }],
+    ];
+  },
 
   themeConfig: {
     logo: "/favicon.svg",

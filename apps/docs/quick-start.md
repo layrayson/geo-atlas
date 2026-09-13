@@ -1,3 +1,7 @@
+---
+description: Fetch boundary data with getBoundaries and render it with BoundaryMap in a few lines of code.
+---
+
 # Quick Start
 
 ## Just the data

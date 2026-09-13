@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://layrayson.github.io/geo-atlas/sitemap.xml
