@@ -11,6 +11,31 @@ Open-source npm library: normalized, validated GeoJSON boundary data (countries/
 
 ![geo-atlas demo: selecting a region on Nigeria, Kenya, and the US choropleth map](./assets/demo.gif)
 
+## Usage
+
+```bash
+npm install @geo-atlas/core @geo-atlas/react
+```
+
+```tsx
+import { useBoundaries, BoundaryMap } from "@geo-atlas/react";
+
+function KenyaMap() {
+  const { boundaries } = useBoundaries({ country: "KE" });
+  if (!boundaries) return null;
+
+  return (
+    <BoundaryMap
+      boundaries={boundaries}
+      data={boundaries.features.map((f) => ({ id: f.properties.shapeISO, value: Math.random() * 100 }))}
+      colorScale={(value) => (value === undefined ? "#eee" : value < 50 ? "#f4a" : "#4a8")}
+    />
+  );
+}
+```
+
+Full walkthrough (including when you need a CORS proxy for countries outside the CDN mirror): [Quick Start](https://layrayson.github.io/geo-atlas/docs/quick-start).
+
 ## Shape
 
 - `packages/core` — `getBoundaries({ country, level, resolution })` fetches, validates, and normalizes boundary data. For the 197 countries covered by [geo-atlas-data](https://github.com/layrayson/geo-atlas-data) (a CDN mirror), it works directly in a browser with zero setup; everything else — mostly dependent territories and microstates geoBoundaries doesn't publish ADM1 data for (Bermuda, Hong Kong, Puerto Rico, Vatican, etc.) — falls back to a live geoBoundaries.org fetch, which needs a same-origin proxy in a pure client-side app (server-side/SSR needs nothing extra either way). GADM is intentionally excluded as a source — its license blocks redistribution.
@@ -50,3 +75,7 @@ pnpm test
 pnpm spike:geoboundaries        # re-run the spike 01 data source survey
 pnpm exec tsx scripts/build-mirror.ts   # regenerate/extend the CDN mirror data (writes to ../geo-atlas-data)
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, project layout, and what to check before opening a PR.
