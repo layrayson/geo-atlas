@@ -57,5 +57,10 @@ function geoBoundariesProxyPlugin(): Plugin {
 }
 
 export default defineConfig({
+  // Served from github.com/layrayson/geo-atlas via a GitHub Pages *project*
+  // site (username.github.io/geo-atlas/), not a custom domain or a user/org
+  // root site - asset URLs need this path prefix or they'd resolve against
+  // the domain root and 404.
+  base: "/geo-atlas/",
   plugins: [react(), geoBoundariesProxyPlugin()],
 });

@@ -6,6 +6,7 @@ export * from "./types.js";
 export { InvalidBoundaryDataError } from "./validate.js";
 export { toIso3 } from "./geoboundaries.js";
 export type { FetchFn } from "./geoboundaries.js";
+export { isMirrored } from "./mirror.js";
 
 export interface GetBoundariesOptions {
   /**

@@ -1,0 +1,393 @@
+/*
+  Concept: a printed field-survey sheet in light mode, a drafting-table
+  blueprint in dark mode. Both are real cartographic media, so the theme
+  swap is a material change (paper vs. cyanotype), not just inverted
+  greyscale. Fraunces (a soft, high-contrast display serif) carries the
+  headline; everything else — labels, data, body copy — runs in JetBrains
+  Mono, so the page reads like a data plate rather than a marketing page.
+*/
+
+:root {
+  --paper: #efe9da;
+  --paper-raised: #f8f4ea;
+  --ink: #211d14;
+  --ink-soft: #746b53;
+  --rule: #cabf9f;
+  --rule-strong: #a89a72;
+  --accent: #d3430f;
+  --accent-contrast: #fdf6ea;
+  --grid-line: rgba(33, 29, 20, 0.07);
+  --scale-low: #c1603f;
+  --scale-mid: #cf9d3c;
+  --scale-high: #587f55;
+  --scale-empty: #d6cdb2;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0b1830;
+    --paper-raised: #0f2138;
+    --ink: #dbe6f2;
+    --ink-soft: #7f97b3;
+    --rule: #24405f;
+    --rule-strong: #3a6188;
+    --accent: #ff7a3d;
+    --accent-contrast: #0b1830;
+    --grid-line: rgba(219, 230, 242, 0.08);
+    --scale-low: #d97753;
+    --scale-mid: #dcb154;
+    --scale-high: #6ea169;
+    --scale-empty: #1c3350;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  /* A faint fibrous grain, so the paper/blueprint reads as material rather
+     than a flat fill - classic print-survey texture, not a UI gradient. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.atlas {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 56px 28px 40px;
+}
+
+.atlas-frame {
+  position: relative;
+  border: 1px solid var(--rule-strong);
+  padding: 40px clamp(20px, 5vw, 56px) 32px;
+}
+
+/* Printer's registration marks in two corners - a deliberate nod to
+   pre-press crop marks, the kind of detail that signals "someone who
+   actually thinks about print production made this." */
+.reg-mark {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.reg-mark::before,
+.reg-mark::after {
+  content: "";
+  position: absolute;
+  background: var(--rule-strong);
+}
+
+.reg-mark::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.reg-mark::after {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.reg-mark--tl {
+  top: -9px;
+  left: -9px;
+}
+
+.reg-mark--br {
+  bottom: -9px;
+  right: -9px;
+}
+
+.atlas-header {
+  animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--rule-strong);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  transform: rotate(-1deg);
+  margin-bottom: 22px;
+}
+
+.stamp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.atlas-title {
+  font-family: "Fraunces", ui-serif, serif;
+  font-optical-sizing: auto;
+  font-weight: 470;
+  font-style: italic;
+  font-size: clamp(42px, 7vw, 64px);
+  line-height: 0.96;
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+  color: var(--ink);
+}
+
+.atlas-tagline {
+  margin: 0 0 8px;
+  max-width: 54ch;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.atlas-tagline .figure {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 30px 0 22px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--rule);
+  animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 220px;
+  max-width: 360px;
+}
+
+.field-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.select {
+  appearance: none;
+  background-color: var(--paper-raised);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' fill='none' stroke='%23d3430f' stroke-width='1.6' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px 38px 11px 14px;
+  cursor: pointer;
+}
+
+.select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 2px 2px 0 var(--accent);
+}
+
+.meta-stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  max-width: 230px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-align: right;
+  padding-left: 14px;
+  border-left: 1px dashed var(--rule);
+}
+
+.meta-stamp-line {
+  line-height: 1.5;
+}
+
+.meta-stamp-line--tag {
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stage-wrap {
+  position: relative;
+  padding: 14px;
+  animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+}
+
+.corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--accent);
+}
+
+.corner--tl {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner--tr {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner--bl {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+.corner--br {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.stage {
+  position: relative;
+  background-color: var(--paper-raised);
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stage svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  animation: rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage-status {
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+.stage-status--error {
+  color: var(--accent);
+  max-width: 42ch;
+  text-align: center;
+  padding: 0 24px;
+  line-height: 1.6;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-top: 16px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.legend-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.swatch {
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.selection {
+  margin-left: auto;
+  font-size: 12px;
+}
+
+.selection strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.atlas-footer {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--rule);
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+.atlas-footer a {
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 3px;
+}
+
+.atlas-footer a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}

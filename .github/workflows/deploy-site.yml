@@ -1,0 +1,79 @@
+name: Deploy demo + docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/demo/**"
+      - "apps/docs/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/deploy-site.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; a new push cancels an in-flight one rather than
+# racing it, since they'd both be publishing to the same Pages environment.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Every consumer - apps/demo, packages/react's own test suite (it
+      # imports "@geo-atlas/core" by package name, not by relative path),
+      # and `vite build` - resolves that package name through its
+      # package.json "main"/"exports", which point at dist/, not src/. So
+      # core must be built before anything else, including `pnpm test`, on
+      # a fresh checkout with no dist/ yet.
+      - run: pnpm --filter @geo-atlas/core build
+      - run: pnpm test
+      - run: pnpm --filter @geo-atlas/react build
+      - run: pnpm --filter demo build
+      - run: pnpm --filter docs build
+
+      # One GitHub Pages site serves both: the demo at the root and the docs
+      # under /docs/ (matching apps/docs' configured `base`). Each app builds
+      # into its own dist/ with no knowledge of the other, so they're
+      # combined into one directory only at deploy time.
+      - name: Combine demo + docs into one Pages artifact
+        run: |
+          mkdir -p pages-dist
+          cp -r apps/demo/dist/. pages-dist/
+          mkdir -p pages-dist/docs
+          cp -r apps/docs/.vitepress/dist/. pages-dist/docs/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

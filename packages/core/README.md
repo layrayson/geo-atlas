@@ -1,5 +1,9 @@
 # @geo-atlas/core
 
+[![npm version](https://img.shields.io/npm/v/@geo-atlas/core)](https://www.npmjs.com/package/@geo-atlas/core)
+[![npm downloads](https://img.shields.io/npm/dw/@geo-atlas/core)](https://www.npmjs.com/package/@geo-atlas/core)
+[![license](https://img.shields.io/npm/l/@geo-atlas/core)](../../LICENSE)
+
 Normalized, validated GeoJSON boundary data (countries and their admin1 subdivisions), sourced from [geoBoundaries.org](https://www.geoboundaries.org/). Fetches, validates the response shape, and rewinds ring winding order to the convention d3-geo (and anything built on it, like react-simple-maps) expects — so you don't have to debug why your map renders inside-out.
 
 ## Install

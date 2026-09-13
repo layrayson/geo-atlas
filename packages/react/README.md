@@ -1,5 +1,9 @@
 # @geo-atlas/react
 
+[![npm version](https://img.shields.io/npm/v/@geo-atlas/react)](https://www.npmjs.com/package/@geo-atlas/react)
+[![npm downloads](https://img.shields.io/npm/dw/@geo-atlas/react)](https://www.npmjs.com/package/@geo-atlas/react)
+[![license](https://img.shields.io/npm/l/@geo-atlas/react)](../../LICENSE)
+
 React map components for [@geo-atlas/core](https://www.npmjs.com/package/@geo-atlas/core) — `<BoundaryMap />` and `useBoundaries()`, wrapping [react-simple-maps](https://www.react-simple-maps.io/)/[d3-geo](https://d3js.org/d3-geo).
 
 ## Install

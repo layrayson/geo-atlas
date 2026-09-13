@@ -1,0 +1,75 @@
+/*
+  geo-atlas uses the same terracotta/safety-orange accent as the demo's
+  field-survey theme, instead of VitePress's stock indigo - a docs site
+  should look conventional in layout (sidebar, search, TOC), but a default,
+  unmodified theme color is the single fastest tell that nobody actually
+  branded the page.
+*/
+:root {
+  --vp-c-brand-1: #d3430f;
+  --vp-c-brand-2: #b8390c;
+  --vp-c-brand-3: #a3330b;
+  --vp-c-brand-soft: rgba(211, 67, 15, 0.14);
+
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+  --vp-button-brand-bg: var(--vp-c-brand-1);
+  --vp-button-brand-hover-bg: var(--vp-c-brand-2);
+  --vp-button-brand-active-bg: var(--vp-c-brand-3);
+}
+
+.dark {
+  --vp-c-brand-1: #ff7a3d;
+  --vp-c-brand-2: #ff9260;
+  --vp-c-brand-3: #e1662f;
+  --vp-c-brand-soft: rgba(255, 122, 61, 0.16);
+}
+
+/*
+  Same two-font system as the demo (Fraunces for display, JetBrains Mono for
+  anything code/data-shaped) so the two surfaces read as one product instead
+  of a themed showcase bolted onto an unmodified doc-framework default. Body
+  copy stays on VitePress's own readable sans stack, unlike the demo (which
+  runs its whole UI in mono) - docs carry far more paragraph-length prose,
+  where mono-as-body would fight legibility rather than add character.
+*/
+:root {
+  --vp-font-family-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+
+.VPHero .name,
+.VPHero .text,
+.vp-doc h1,
+.vp-doc h2 {
+  font-family: "Fraunces", ui-serif, Georgia, serif;
+  font-optical-sizing: auto;
+  font-weight: 470;
+  letter-spacing: -0.01em;
+}
+
+.VPHero .name {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* A faint paper grain behind the content column, echoing the demo's
+   survey-sheet texture - kept off the nav/sidebar chrome, which VitePress
+   already paints with a solid --vp-c-bg, so it reads as a property of the
+   page rather than fighting the framework's own surfaces. */
+.VPContent {
+  position: relative;
+}
+
+.VPContent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.VPContent > * {
+  position: relative;
+  z-index: 1;
+}

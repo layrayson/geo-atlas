@@ -4,3 +4,4 @@ dist/
 *.log
 spikes/**/data/
 .claude/
+**/.vitepress/cache/
