@@ -6,6 +6,10 @@
 
 React map components for [@geo-atlas/core](https://www.npmjs.com/package/@geo-atlas/core) — `<BoundaryMap />` and `useBoundaries()`, wrapping [react-simple-maps](https://www.react-simple-maps.io/)/[d3-geo](https://d3js.org/d3-geo).
 
+![geo-atlas demo: selecting a region on Nigeria, Kenya, and the US choropleth map](../../assets/demo.gif)
+
+Try it live: [Boundary Explorer](https://layrayson.github.io/geo-atlas/) · [Documentation](https://layrayson.github.io/geo-atlas/docs/)
+
 ## Install
 
 ```bash

@@ -6,6 +6,10 @@
 
 Normalized, validated GeoJSON boundary data (countries and their admin1 subdivisions), sourced from [geoBoundaries.org](https://www.geoboundaries.org/). Fetches, validates the response shape, and rewinds ring winding order to the convention d3-geo (and anything built on it, like react-simple-maps) expects — so you don't have to debug why your map renders inside-out.
 
+![geo-atlas demo: selecting a region on Nigeria, Kenya, and the US choropleth map](../../assets/demo.gif)
+
+Try it live: [Boundary Explorer](https://layrayson.github.io/geo-atlas/) · [Documentation](https://layrayson.github.io/geo-atlas/docs/)
+
 ## Install
 
 ```bash
